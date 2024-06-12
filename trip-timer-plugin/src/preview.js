@@ -124,11 +124,16 @@ function niceHumanTime(time) {
 	});
 }
 
+// This could use consolidation with the same function in TripCounter.js
 function calculateTimeLeft(time) {
 	const now = new Date();
 	const then = new Date();
 
 	const [hours, minutes] = time.split(":");
+
+	// These variables could be globalized in order to be accessible to all files, and replace raw numerical seconds values for readability
+	const hourInSeconds = 3600;
+	const minuteInSeconds = 60;
 
 	now.setHours(hours);
 	now.setMinutes(minutes);
@@ -136,16 +141,28 @@ function calculateTimeLeft(time) {
 
 	let secondsLeft = (now - then) / 1000; // millis
 
-	if (secondsLeft > 3600) {
-		let hours = Math.floor(secondsLeft / 3600);
-		let minutes = Math.floor((secondsLeft % 3600) / 60);
+	// To avoid negative overflow being displayed, set secondsLeft to 0 if less than 0
+	if (secondsLeft < 0) {
+		secondsLeft = 0;
+	}
+	// If at least 1 hour left in seconds, display the time in hour:minute format, otherwise display time in minute:second format
+	else if (secondsLeft > 3600) {
+		// Divide secondsLeft by 3600 to get hours left
+		let hours = Math.floor(secondsLeft / hourInSeconds);
+		// Get remainder of seconds left after diving by hour then divide by 60 to get minutes left
+		let minutes = Math.floor((secondsLeft % hourInSeconds) / minuteInSeconds);
+		let hourString = hours === 1 ? 'HOUR' : 'HOURS';
+		let minuteString = minutes === 1 ? 'MINUTE' : 'MINUTES';
 
-		return `${hours} Hours and ${minutes} minutes`;
-	} else if (secondsLeft > 60) {
-		let minutes = Math.floor(secondsLeft / 60);
-		let seconds = Math.floor(secondsLeft % 60);
+		return `${hours} ${hourString} AND ${minutes} ${minuteString}`;
+	}
+	else if (secondsLeft > 60) {
+		let minutes = Math.floor(secondsLeft / minuteInSeconds);
+		let seconds = Math.floor(secondsLeft % minuteInSeconds);
+		let minuteString = minutes === 1 ? 'MINUTE' : 'MINUTES';
+		let secondString = seconds === 1 ? 'SECOND' : 'SECONDS';
 
-		return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+		return `${minutes} ${minuteString} AND ${seconds.toString().padStart(2, "0")} ${secondString}`;
 	}
 
 	return `${secondsLeft} SECONDS`;
