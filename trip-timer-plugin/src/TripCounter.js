@@ -79,13 +79,13 @@ export default function TripCounter({ tripName, tripTime }) {
     });
 
 	return (
-		<div class="CountdownPage">
+		<div className="CountdownPage">
 			<h2>{tripName}</h2>
-			<div class={"timeInfo" + getTimeInfoColorClass(secondsLeft)}>
+			<div className={"timeInfo" + getTimeInfoColorClass(secondsLeft)}>
 				<div>Out the door at {niceHumanTime(tripTime)}</div>
 				<div>{timeLeft} LEFT!</div>
 			</div>
-			<div class="otherStuff">
+			<div className="otherStuff">
                 <div>
                     <h2>Things Left To Do</h2>
                 </div>
@@ -97,7 +97,7 @@ export default function TripCounter({ tripName, tripTime }) {
 
                 <div>
                     <input
-                        class="newTask"
+                        className="newTask"
                         placeholder="Add tasks here"
                         value={newTaskText}
                         onChange={e => setNewTaskText(e.target.value)}
