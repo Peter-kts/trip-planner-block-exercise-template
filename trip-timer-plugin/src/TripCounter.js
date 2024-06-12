@@ -9,12 +9,14 @@ export default function TripCounter({ tripName, tripTime }) {
 	const [secondsLeft, setSecondsLeft] = useState(
 		calculateSecondsLeft(tripTime),
 	);
-	const encouragement = "Let's go!";
+	const [encouragement, setEncouragement] = useState("Let's go!");
 
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setTimeLeft(calculateTimeLeft(tripTime));
 			setSecondsLeft(calculateSecondsLeft(tripTime));
+			// Generate message based on secondsLeft which is calculated above
+			setEncouragement(calculateEncouragement(secondsLeft));
 		}, 500);
 		return () => {
 			clearInterval(interval);
@@ -109,6 +111,20 @@ export default function TripCounter({ tripName, tripTime }) {
             </div>
         </div>
 	);
+}
+
+function calculateEncouragement(secondsLeft) {
+	// If less than 5 minutes
+	if (secondsLeft < 60 * 5) {
+		return "Time to go!";
+	}
+	// If between 5 and 10 minutes
+	else if (secondsLeft < 60 * 10 ) {
+		return "Almost time to leave!";
+	}
+	else {
+		return "Let's go!";
+	}
 }
 
 function calculateSecondsLeft(time) {
