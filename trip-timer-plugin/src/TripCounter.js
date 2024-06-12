@@ -9,14 +9,19 @@ export default function TripCounter({ tripName, tripTime }) {
 	const [secondsLeft, setSecondsLeft] = useState(
 		calculateSecondsLeft(tripTime),
 	);
-	const [encouragement, setEncouragement] = useState("Let's go!");
+	const [encouragement, setEncouragement] = useState(calculateEncouragement(secondsLeft));
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setTimeLeft(calculateTimeLeft(tripTime));
-			setSecondsLeft(calculateSecondsLeft(tripTime));
+			// Set new time variables to account for reacts asynchronous state updates
+			const newTimeLeft = calculateTimeLeft(tripTime);
+			const newSecondsLeft = calculateSecondsLeft(tripTime);
+
+			setTimeLeft(newTimeLeft);
+			setSecondsLeft(newSecondsLeft);
+
 			// Generate message based on secondsLeft which is calculated above
-			setEncouragement(calculateEncouragement(secondsLeft));
+			setEncouragement(calculateEncouragement(newSecondsLeft));
 		}, 500);
 		return () => {
 			clearInterval(interval);
